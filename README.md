@@ -104,4 +104,4 @@ Ejemplo de cadena de inferencia: R01 deriva `SolicitudAnalizada`; R02, R04 y R08
 
 ## Equipo y responsabilidad
 
-El Grupo F es responsable del desarrollo. El Grupo E actúa como cliente del sistema. La aplicación debe ser revisada por el equipo antes de la entrega final.
+El Grupo F es responsable del desarrollo. El Grupo E actúa como cliente del sistema.
