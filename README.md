@@ -27,7 +27,7 @@ El sistema recibe una solicitud con cantidad de estudiantes, día, franja horari
 
 Los datos de aulas y ocupaciones incluidos son **datos de ejemplo**, no un registro institucional real. Las asignaciones confirmadas se guardan solo en la sesión de ejecución y no persisten al cerrar el programa.
 
-## Estructura
+## Estructura del repositorio
 
 ```text
 AD2_2026.2_GF_REPO/
@@ -49,25 +49,27 @@ La versión exacta de Python usada para validar la entrega debe registrarse aqu�
 
 ## Instalación
 
-Desde la carpeta raíz del repositorio:
+Desde la carpeta raíz del repositorio, crear un entorno virtual:
 
 ```bash
 python -m venv .venv
 ```
 
-Activar el entorno virtual:
+Activar el entorno virtual según el sistema operativo.
 
 **Windows (PowerShell):**
+
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
 
 **macOS/Linux:**
+
 ```bash
 source .venv/bin/activate
 ```
 
-Instalar dependencias:
+Instalar las dependencias:
 
 ```bash
 python -m pip install --upgrade pip
@@ -76,36 +78,30 @@ python -m pip install -r requirements.txt
 
 ## Ejecución de la aplicación
 
+Desde la carpeta raíz del repositorio, ejecutar:
+
 ```bash
 python main.py
 ```
 
 Gradio mostrará en la terminal la dirección local para abrir la interfaz en el navegador. No se activa un enlace público compartido por defecto.
 
-## Ejecutar los casos de prueba
-
-Desde la carpeta raíz:
-
-```bash
-python -m unittest discover -s pruebas -v
-```
-
-Las pruebas verifican criterios principales del motor. Antes de la entrega, el equipo debe contrastar sus resultados con los casos oficiales CP-01 a CP-08 del cliente y agregar cualquier escenario que no esté cubierto.
-
 ## Motor de reglas y trazabilidad
 
-El motor usa Experta con encadenamiento hacia adelante: parte de hechos iniciales (`Solicitud` y `Aula`), dispara reglas que derivan hechos intermedios y continúa hasta generar clasificación y diagnósticos. Las reglas R01–R24 están documentadas en `reglas.py`. Cada ejecución conserva `motor.traza`, que registra el identificador y la descripción de las reglas disparadas.
+El motor utiliza Experta con encadenamiento hacia adelante. Parte de hechos iniciales (`Solicitud` y `Aula`), dispara reglas que derivan hechos intermedios y continúa hasta generar clasificaciones y diagnósticos.
 
-Ejemplo de cadena de inferencia: R01 deriva `SolicitudAnalizada`; R02/R04/R08 evalúan capacidad, recursos y disponibilidad; R10 deriva `Candidata`; R11 genera `AulaValida`; R12 calcula el excedente; R23 produce una explicación final.
+Las reglas R01–R24 están documentadas en `reglas.py`. Cada ejecución conserva `motor.traza`, que registra el identificador y la descripción de las reglas disparadas.
+
+Ejemplo de cadena de inferencia: R01 deriva `SolicitudAnalizada`; R02, R04 y R08 evalúan capacidad, recursos y disponibilidad; R10 deriva `Candidata`; R11 genera `AulaValida`; R12 calcula el excedente de capacidad; y R23 produce una explicación final.
 
 ## Limitaciones conocidas
 
-- Catálogo y ocupaciones de ejemplo.
+- El catálogo de aulas y las ocupaciones son datos de ejemplo.
 - No optimiza el horario global del cuatrimestre ni prioriza automáticamente solicitudes simultáneas.
 - No gestiona eventos o exámenes ni integra sistemas académicos externos.
-- Las ocupaciones agregadas por el botón de confirmación existen solo durante la sesión actual.
-- Las versiones de dependencias deben probarse en un entorno limpio antes de considerar la ejecución plenamente reproducible.
+- Las ocupaciones agregadas mediante el botón de confirmación existen solo durante la sesión actual.
+- Las versiones de las dependencias deben probarse en un entorno limpio antes de considerar la ejecución plenamente reproducible.
 
 ## Equipo y responsabilidad
 
-El Grupo F es responsable del desarrollo. El Grupo E actúa como cliente del sistema. La aplicación y los casos de prueba deben ser revisados por el equipo antes de la entrega final.
+El Grupo F es responsable del desarrollo. El Grupo E actúa como cliente del sistema. La aplicación debe ser revisada por el equipo antes de la entrega final.
