@@ -37,8 +37,6 @@ AD2_2026.2_GF_REPO/
 ├── reglas.py
 ├── interfaz.py
 ├── datos.py
-├── pruebas/
-│   └── casos_prueba.py
 └── .gitignore
 ```
 
