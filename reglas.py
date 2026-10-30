@@ -158,27 +158,27 @@ class MotorAulas(KnowledgeEngine):
         self.registrar("R07", f"{a}: se deriva falta de computadoras.")
 
     # R08. Conocimiento: una franja sin superposición está disponible.
-    @Rule(AND(SolicitudAnalizada(dia=MATCH.d, inicio=MATCH.i, fin=MATCH.f),
-              Aula(nombre=MATCH.a),
-              TEST(lambda a, d, i, f: not self.registro.aula_ocupada_en(a, d, i, f))))
+    @Rule(SolicitudAnalizada(dia=MATCH.d, inicio=MATCH.i, fin=MATCH.f),
+              Aula(nombre=MATCH.a))
     def r08_horario_ok(self, d, i, f, a):
-        self.declare(HorarioOK(aula=a))
-        self.registrar("R08", f"{a}: no se detectan superposiciones horarias.")
-
-    # R09. Conocimiento: una superposición con una ocupación existente impide la asignación.
-    @Rule(AND(SolicitudAnalizada(dia=MATCH.d, inicio=MATCH.i, fin=MATCH.f),
-              Aula(nombre=MATCH.a),
-              TEST(lambda a, d, i, f: self.registro.aula_ocupada_en(a, d, i, f))))
+        if not self.registro.aula_ocupada_en(a, d, i, f):
+            self.declare(HorarioOK(aula=a))
+            self.registrar("R08", f"{a}: no se detectan superposiciones horarias.")
+# R09. Conocimiento: una superposición con una ocupación existente impide la asignación.
+    @Rule(
+        SolicitudAnalizada(dia=MATCH.d, inicio=MATCH.i, fin=MATCH.f),
+        Aula(nombre=MATCH.a)
+    )
     def r09_conflicto_horario(self, a, d, i, f):
         ocupaciones = [
             (ini, fin) for au, dia_oc, ini, fin in self.registro.ocupaciones
             if au == a and normalizar_dia(dia_oc) == normalizar_dia(d)
             and se_superponen(i, f, ini, fin)
         ]
-        detalle = ", ".join(f"{ini}-{fin}" for ini, fin in ocupaciones)
-        self.declare(ConflictoHorario(aula=a, detalle=detalle))
-        self.registrar("R09", f"{a}: conflicto horario con {detalle}.")
-
+        if ocupaciones:
+            detalle = ", ".join(f"{ini}-{fin}" for ini, fin in ocupaciones)
+            self.declare(ConflictoHorario(aula=a, detalle=detalle))
+            self.registrar("R09", f"{a}: conflicto horario con {detalle}.")
     # R10. Conocimiento: capacidad, recursos y horario positivos hacen candidata a un aula.
     @Rule(AND(CapacidadOK(aula=MATCH.a), RecursosOK(aula=MATCH.a), HorarioOK(aula=MATCH.a)))
     def r10_generar_candidata(self, a):
